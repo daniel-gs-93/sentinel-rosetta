@@ -1,0 +1,57 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "sentinel-rosetta"
+version = "0.1.0"
+requires-python = ">=3.9,<3.10"
+dependencies = [
+    "ctranslate2>=4.0.0",
+    "transformers>=4.30.0",
+    "sentencepiece>=0.1.99",
+    "sacremoses>=0.1.1",
+    "fastapi>=0.100.0",
+    "uvicorn>=0.23.0",
+    "pydantic>=2.0.0",
+    "streamlit>=1.28.0",
+    "requests>=2.31.0",
+    "opencc-python-reimplemented>=0.1.7",
+]
+
+[project.optional-dependencies]
+dev = ["ruff>=0.6", "mypy>=1.11", "types-requests", "pytest>=7.4.0", "httpx>=0.25.0"]
+
+[project.scripts]
+sentinel = "sentinel_rosetta.presentation.cli:main"
+
+[tool.ruff]
+target-version = "py39"
+line-length = 80
+src = ["src", "tests"]
+
+[tool.ruff.lint]
+select = ["E", "W", "F", "I", "N", "UP", "B", "BLE", "ANN", "PTH", "SIM", "RET", "C4"]
+
+[tool.ruff.format]
+docstring-code-format = true
+
+[tool.ruff.lint.flake8-bugbear]
+extend-immutable-calls = ["fastapi.Depends"]
+
+[tool.mypy]
+python_version = "3.9"
+strict = true
+files = ["src", "tests"]
+
+[[tool.mypy.overrides]]
+module = "ctranslate2.*"
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = ["opencc", "opencc.*"]
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = "sentinel_rosetta.infrastructure.ctranslate2_adapter"
+disallow_untyped_calls = false
